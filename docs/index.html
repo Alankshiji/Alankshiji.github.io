@@ -885,17 +885,275 @@
     50% { opacity:0.5; transform: scale(1.4); }
   }
 
-  /* ===== ANIMATIONS ===== */
-  .reveal {
-    opacity: 0;
-    transform: translateY(30px);
-    transition: opacity 0.7s ease, transform 0.7s ease;
+  /* ===== CUSTOM CURSOR ===== */
+  #cursor {
+    position: fixed;
+    width: 10px;
+    height: 10px;
+    background: var(--accent);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 99999;
+    transform: translate(-50%, -50%);
+    transition: transform 0.08s ease, width 0.2s ease, height 0.2s ease, background 0.2s ease;
+    mix-blend-mode: screen;
   }
 
-  .reveal.visible {
-    opacity: 1;
-    transform: none;
+  #cursor-trail {
+    position: fixed;
+    width: 32px;
+    height: 32px;
+    border: 1px solid rgba(0,200,255,0.4);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 99998;
+    transform: translate(-50%, -50%);
+    transition: transform 0.18s ease, width 0.3s ease, height 0.3s ease, border-color 0.3s ease;
   }
+
+  body.cursor-hover #cursor { width: 6px; height: 6px; background: var(--accent2); }
+  body.cursor-hover #cursor-trail { width: 48px; height: 48px; border-color: rgba(0,255,157,0.5); }
+
+  @media (hover: none) { #cursor, #cursor-trail { display: none; } }
+
+  /* ===== ANIMATIONS ===== */
+
+  /* Slide up — default */
+  .reveal {
+    opacity: 0;
+    transform: translateY(40px);
+    transition: opacity 0.75s cubic-bezier(0.16,1,0.3,1), transform 0.75s cubic-bezier(0.16,1,0.3,1);
+  }
+  .reveal.visible { opacity: 1; transform: none; }
+
+  /* Slide from left */
+  .reveal-left {
+    opacity: 0;
+    transform: translateX(-50px);
+    transition: opacity 0.75s cubic-bezier(0.16,1,0.3,1), transform 0.75s cubic-bezier(0.16,1,0.3,1);
+  }
+  .reveal-left.visible { opacity: 1; transform: none; }
+
+  /* Slide from right */
+  .reveal-right {
+    opacity: 0;
+    transform: translateX(50px);
+    transition: opacity 0.75s cubic-bezier(0.16,1,0.3,1), transform 0.75s cubic-bezier(0.16,1,0.3,1);
+  }
+  .reveal-right.visible { opacity: 1; transform: none; }
+
+  /* Scale in */
+  .reveal-scale {
+    opacity: 0;
+    transform: scale(0.88);
+    transition: opacity 0.7s cubic-bezier(0.16,1,0.3,1), transform 0.7s cubic-bezier(0.16,1,0.3,1);
+  }
+  .reveal-scale.visible { opacity: 1; transform: scale(1); }
+
+  /* Hero entrance animations */
+  .hero-label   { animation: heroFadeUp 0.8s cubic-bezier(0.16,1,0.3,1) 0.1s both; }
+  .hero-name    { animation: heroFadeUp 0.9s cubic-bezier(0.16,1,0.3,1) 0.25s both; }
+  .hero-title   { animation: heroFadeUp 0.9s cubic-bezier(0.16,1,0.3,1) 0.4s both; }
+  .hero-desc    { animation: heroFadeUp 0.9s cubic-bezier(0.16,1,0.3,1) 0.55s both; }
+  .hero-actions { animation: heroFadeUp 0.9s cubic-bezier(0.16,1,0.3,1) 0.7s both; }
+  .hero-stats   { animation: heroFadeUp 0.9s cubic-bezier(0.16,1,0.3,1) 0.85s both; }
+
+  @keyframes heroFadeUp {
+    from { opacity: 0; transform: translateY(28px); }
+    to   { opacity: 1; transform: none; }
+  }
+
+  /* Glows parallax drift */
+  .hero-glow  { animation: driftA 8s ease-in-out infinite alternate; }
+  .hero-glow2 { animation: driftB 10s ease-in-out infinite alternate; }
+  @keyframes driftA { from { transform: translate(0,0) scale(1); } to { transform: translate(30px,-20px) scale(1.08); } }
+  @keyframes driftB { from { transform: translate(0,0) scale(1); } to { transform: translate(-20px,30px) scale(1.1); } }
+
+  /* Nav link underline sweep */
+  .nav-links a {
+    position: relative;
+  }
+  .nav-links a::after {
+    content: '';
+    position: absolute;
+    bottom: -2px; left: 0;
+    width: 0; height: 1px;
+    background: var(--accent);
+    transition: width 0.3s ease;
+  }
+  .nav-links a:hover::after { width: 100%; }
+
+  /* Section title char-by-char reveal via clip */
+  .section-title {
+    clip-path: inset(0 100% 0 0);
+    transition: clip-path 0s;
+  }
+  .section-title.title-visible {
+    clip-path: inset(0 0% 0 0);
+    transition: clip-path 0.9s cubic-bezier(0.16,1,0.3,1);
+  }
+
+  /* Skill card — shine sweep on hover */
+  .skill-card {
+    isolation: isolate;
+  }
+  .skill-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: -75%;
+    width: 50%; height: 100%;
+    background: linear-gradient(120deg, transparent, rgba(0,200,255,0.07), transparent);
+    transform: skewX(-20deg);
+    transition: left 0.6s ease;
+    z-index: 1;
+    pointer-events: none;
+  }
+  .skill-card:hover::before { left: 130%; }
+
+  /* Skill tag pop on hover */
+  .skill-tag {
+    transition: transform 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
+    cursor: default;
+  }
+  .skill-tag:hover {
+    transform: translateY(-2px) scale(1.06);
+    box-shadow: 0 4px 12px rgba(0,200,255,0.18);
+  }
+  .skill-tag.green:hover { box-shadow: 0 4px 12px rgba(0,255,157,0.18); }
+  .skill-tag.red:hover   { box-shadow: 0 4px 12px rgba(255,64,96,0.18); }
+
+  /* Edu card hover glow */
+  .edu-card {
+    transition: border-color 0.35s, transform 0.35s cubic-bezier(0.16,1,0.3,1), box-shadow 0.35s;
+  }
+  .edu-card:hover {
+    border-color: rgba(0,255,157,0.4);
+    transform: translateY(-6px);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.4), 0 0 20px rgba(0,255,157,0.06);
+  }
+
+  /* Exp item left-border sweep */
+  .exp-item {
+    transition: background 0.3s;
+  }
+  .exp-item::after {
+    content: '';
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 2px;
+    background: linear-gradient(180deg, var(--accent), var(--accent2));
+    transform: scaleY(0);
+    transform-origin: top;
+    transition: transform 0.4s cubic-bezier(0.16,1,0.3,1);
+  }
+  .exp-item:hover::after { transform: scaleY(1); }
+  .exp-item:hover { background: rgba(0,200,255,0.02); }
+
+  /* Cert item hover */
+  .cert-item {
+    transition: border-color 0.3s, transform 0.3s cubic-bezier(0.16,1,0.3,1), background 0.3s;
+    position: relative;
+    overflow: hidden;
+  }
+  .cert-item::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg, rgba(0,200,255,0.04), transparent);
+    transform: translateX(-100%);
+    transition: transform 0.4s ease;
+  }
+  .cert-item:hover { border-color: rgba(0,200,255,0.35); transform: translateX(4px); }
+  .cert-item:hover::before { transform: translateX(0); }
+
+  /* Contact link ripple-slide */
+  .contact-link {
+    overflow: hidden;
+  }
+  .contact-link::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: rgba(0,200,255,0.04);
+    transform: translateX(-100%);
+    transition: transform 0.35s ease;
+  }
+  .contact-link { position: relative; }
+  .contact-link:hover::before { transform: translateX(0); }
+
+  /* About card row hover highlight */
+  .info-row {
+    transition: background 0.2s, padding 0.2s;
+    border-radius: 2px;
+  }
+  .info-row:hover { background: rgba(0,200,255,0.04); padding-left: 6px; padding-right: 6px; }
+
+  /* Terminal typing line scan */
+  .terminal-body { position: relative; }
+  .terminal-body::after {
+    content: '';
+    position: absolute;
+    left: 0; right: 0;
+    height: 1px;
+    background: rgba(0,200,255,0.08);
+    animation: scanLine 3s linear infinite;
+    pointer-events: none;
+  }
+  @keyframes scanLine {
+    0%   { top: 0; opacity: 0; }
+    5%   { opacity: 1; }
+    95%  { opacity: 1; }
+    100% { top: 100%; opacity: 0; }
+  }
+
+  /* Scroll progress bar */
+  #scroll-bar {
+    position: fixed;
+    top: 64px;
+    left: 0;
+    height: 2px;
+    width: 0%;
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
+    z-index: 1001;
+    transition: width 0.1s linear;
+  }
+
+  /* Section number background decoration */
+  .section-header { position: relative; }
+  .section-bg-num {
+    position: absolute;
+    right: 0;
+    top: -20px;
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: clamp(80px, 12vw, 160px);
+    color: rgba(0,200,255,0.03);
+    line-height: 1;
+    pointer-events: none;
+    user-select: none;
+    letter-spacing: -0.04em;
+  }
+
+  /* Stat counter animation */
+  .stat-num { transition: color 0.3s; }
+  .stat:hover .stat-num { color: var(--accent2); }
+  .stat { transition: transform 0.3s; cursor: default; }
+  .stat:hover { transform: translateY(-4px); }
+
+  /* Button secondary arrow slide */
+  .btn-secondary {
+    position: relative;
+    overflow: hidden;
+  }
+  .btn-secondary::after {
+    content: ' →';
+    position: absolute;
+    right: -20px;
+    opacity: 0;
+    transition: right 0.3s ease, opacity 0.3s ease;
+  }
+  .btn-secondary:hover { padding-right: 42px; }
+  .btn-secondary:hover::after { right: 14px; opacity: 1; }
 
   /* ===== RESPONSIVE ===== */
   @media (max-width: 768px) {
@@ -933,6 +1191,10 @@
 </head>
 <body>
 
+<!-- Custom cursor -->
+<div id="cursor"></div>
+<div id="cursor-trail"></div>
+
 <!-- NAV -->
 <nav>
   <a class="nav-logo" href="#hero">AKS<span> / PORTFOLIO</span></a>
@@ -948,6 +1210,8 @@
     <span></span><span></span><span></span>
   </div>
 </nav>
+
+<div id="scroll-bar"></div>
 
 <div class="mobile-menu" id="mobileMenu">
   <a href="#about" onclick="toggleMenu()">About</a>
@@ -989,8 +1253,8 @@
       <span class="stat-label">Specialization</span>
     </div>
     <div class="stat">
-      <span class="stat-num">BCA</span>
-      <span class="stat-label">Degree</span>
+      <span class="stat-num">2nd Yr</span>
+      <span class="stat-label">BCA · Pursuing</span>
     </div>
     <div class="stat">
       <span class="stat-num">∞</span>
@@ -1007,11 +1271,12 @@
 <!-- ABOUT -->
 <section id="about">
   <div class="section-header reveal">
+    <span class="section-bg-num">01</span>
     <p class="section-tag">01 — About Me</p>
     <h2 class="section-title">Securing the<br>Digital Frontier</h2>
   </div>
   <div class="about-grid">
-    <div class="about-text reveal">
+    <div class="about-text reveal-left">
       <p>
         I'm <span class="about-highlight">Alan K Shiji</span>, a Computer Applications graduate with a passion for <span class="about-highlight">cybersecurity, ethical hacking</span>, and AI-driven solutions. Based in Kottayam, Kerala, I thrive at the intersection of offensive security and machine intelligence.
       </p>
@@ -1022,7 +1287,7 @@
         I'm committed to continuous learning in rapidly shifting threat landscapes, with a particular focus on identifying vulnerabilities, understanding systemic exploitation vectors, and implementing robust safeguards for enterprise environments.
       </p>
     </div>
-    <div class="about-card reveal">
+    <div class="about-card reveal-right">
       <p class="about-card-title">// Personal Details</p>
       <div class="info-row">
         <span class="info-key">Location</span>
@@ -1051,6 +1316,7 @@
 <!-- EXPERIENCE -->
 <section id="experience">
   <div class="section-header reveal">
+    <span class="section-bg-num">02</span>
     <p class="section-tag">02 — Experience</p>
     <h2 class="section-title">Where I've<br>Made Impact</h2>
   </div>
@@ -1090,6 +1356,7 @@
 <!-- SKILLS -->
 <section id="skills">
   <div class="section-header reveal">
+    <span class="section-bg-num">03</span>
     <p class="section-tag">03 — Skills</p>
     <h2 class="section-title">Technical<br>Arsenal</h2>
   </div>
@@ -1151,16 +1418,20 @@
 <!-- EDUCATION -->
 <section id="education">
   <div class="section-header reveal">
+    <span class="section-bg-num">04</span>
     <p class="section-tag">04 — Education</p>
     <h2 class="section-title">Academic<br>Foundation</h2>
   </div>
 
   <div class="edu-grid">
     <div class="edu-card reveal">
-      <p class="edu-year">Graduated Sep 2024</p>
+      <p class="edu-year" style="color:var(--accent2)">● Currently Pursuing — Expected Apr 2027</p>
       <h3 class="edu-degree">Bachelor of Computer Applications (BCA) in Computer Science</h3>
       <p class="edu-school">M.C. Varghese Arts and Science College</p>
-      <p class="edu-loc">Kottayam, Kerala</p>
+      <p class="edu-loc" style="display:flex;flex-direction:column;gap:4px;">
+        <span>Kottayam, Kerala</span>
+        <span style="font-family:'Space Mono',monospace;font-size:10px;color:var(--text3);letter-spacing:0.1em;">2nd Year · 3rd Year Expected Apr 2027</span>
+      </p>
     </div>
 
     <div class="edu-card reveal">
@@ -1175,6 +1446,7 @@
 <!-- CERTIFICATIONS -->
 <section id="certifications">
   <div class="section-header reveal">
+    <span class="section-bg-num">05</span>
     <p class="section-tag">05 — Certifications &amp; Workshops</p>
     <h2 class="section-title">Continuous<br>Learning</h2>
   </div>
@@ -1210,6 +1482,7 @@
 <!-- CONTACT -->
 <section id="contact">
   <div class="section-header reveal">
+    <span class="section-bg-num">06</span>
     <p class="section-tag">06 — Contact</p>
     <h2 class="section-title">Let's Build<br>Something Secure</h2>
   </div>
